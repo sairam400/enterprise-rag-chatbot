@@ -4,8 +4,7 @@ A chatbot that answers questions from your uploaded documents only, with a
 citation on every claim. If the answer isn't in the documents, it says so
 instead of guessing.
 
-Status: Phase 7 in progress (Docker verification, see
-[KNOWN_ISSUES.md](KNOWN_ISSUES.md)). See [Roadmap](#roadmap).
+Status: All phases complete. See [Roadmap](#roadmap).
 
 ---
 
@@ -184,7 +183,7 @@ questions, which is a natural next step, not something I claim this covers.
 - [x] Phase 4: FastAPI endpoints
 - [x] Phase 5: React frontend
 - [x] Phase 6: eval harness + sample docs
-- [ ] Phase 7: README polish, final cleanup
+- [x] Phase 7: Docker full-stack verification, README polish, final cleanup
 
 ---
 
