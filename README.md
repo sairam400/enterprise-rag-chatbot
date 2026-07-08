@@ -4,14 +4,16 @@ A chatbot that answers questions from your uploaded documents only, with a
 citation on every claim. If the answer isn't in the documents, it says so
 instead of guessing.
 
-Status: Phase 6 of 7 complete (eval harness). See [Roadmap](#roadmap).
+Status: Phase 7 in progress (Docker verification, see
+[KNOWN_ISSUES.md](KNOWN_ISSUES.md)). See [Roadmap](#roadmap).
 
 ---
 
 ## Demo
 
-<!-- Phase 7: replace with a demo GIF -->
-Demo GIF placeholder, added in Phase 7.
+No screen recording yet. Run the quickstart below and try uploading one of
+the [`sample_docs`](sample_docs) files, then ask it something the docs
+actually cover and something they don't.
 
 ---
 
@@ -30,7 +32,6 @@ guessing.
 
 ## Architecture
 
-<!-- Phase 7: replace with an architecture diagram -->
 ```
                     +-------------+
   Upload  --------->|  Ingestion  |  parse -> chunk -> embed -> store
@@ -94,10 +95,13 @@ this repeatedly against your own documents.
 
 ```bash
 cd backend
+cp .env.example .env         # then edit .env and set ANTHROPIC_API_KEY
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
+
+The frontend runs separately: see [`frontend/README.md`](frontend/README.md).
 
 ---
 
@@ -187,11 +191,11 @@ questions, which is a natural next step, not something I claim this covers.
 ## Project Structure
 
 ```
-├── backend/          FastAPI app, ingestion, retrieval, provider adapters
+├── backend/          FastAPI app: ingestion, retrieval, provider adapters
 │   └── app/
-├── frontend/         React 18 + CSS Modules chat UI            (Phase 5)
-├── evals/            Retrieval + faithfulness evaluation harness (Phase 6)
-├── sample_docs/      Generated demo documents                   (Phase 6)
+├── frontend/         React 18 + CSS Modules chat UI
+├── evals/            Retrieval hit rate + faithfulness evaluation harness
+├── sample_docs/      Generated demo documents used by the harness
 ├── docker-compose.yml
 └── .env.example
 ```

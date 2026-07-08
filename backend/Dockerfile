@@ -10,7 +10,10 @@ WORKDIR /app
 
 # Install dependencies first so the layer is cached across code changes.
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+# CPU-only torch: the default PyPI wheel drags in the full CUDA stack
+# (~2GB of unused GPU libraries) for a model that only ever runs on CPU here.
+RUN pip install --timeout 120 --retries 5 torch --index-url https://download.pytorch.org/whl/cpu \
+    && pip install --timeout 120 --retries 5 -r requirements.txt
 
 # Application code.
 COPY app ./app
