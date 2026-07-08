@@ -1,0 +1,100 @@
+[
+  {
+    "id": "hr-1",
+    "question": "How many vacation days do full-time employees accrue per year?",
+    "expected_source_file": "hr_policies.md",
+    "expected_answer_contains": "18",
+    "answerable": true
+  },
+  {
+    "id": "hr-2",
+    "question": "Do unused vacation days roll over into the next year?",
+    "expected_source_file": "hr_policies.md",
+    "expected_answer_contains": "forfeited",
+    "answerable": true
+  },
+  {
+    "id": "hr-3",
+    "question": "What is the daily meal reimbursement limit during business travel?",
+    "expected_source_file": "hr_policies.md",
+    "expected_answer_contains": "$75",
+    "answerable": true
+  },
+  {
+    "id": "security-1",
+    "question": "What is the minimum required password length?",
+    "expected_source_file": "security_policy.txt",
+    "expected_answer_contains": "14",
+    "answerable": true
+  },
+  {
+    "id": "security-2",
+    "question": "How often must passwords be rotated?",
+    "expected_source_file": "security_policy.txt",
+    "expected_answer_contains": "180 days",
+    "answerable": true
+  },
+  {
+    "id": "security-3",
+    "question": "Within how long must a suspected security incident be reported?",
+    "expected_source_file": "security_policy.txt",
+    "expected_answer_contains": "1 hour",
+    "answerable": true
+  },
+  {
+    "id": "onboarding-1",
+    "question": "How many days do new employees have to enroll in benefits?",
+    "expected_source_file": "onboarding_guide.docx",
+    "expected_answer_contains": "30 days",
+    "answerable": true
+  },
+  {
+    "id": "onboarding-2",
+    "question": "How close to the start date is a new hire's laptop shipped?",
+    "expected_source_file": "onboarding_guide.docx",
+    "expected_answer_contains": "2 business days",
+    "answerable": true
+  },
+  {
+    "id": "onboarding-3",
+    "question": "What do engineering new hires need to complete before getting production access?",
+    "expected_source_file": "onboarding_guide.docx",
+    "expected_answer_contains": "security training",
+    "answerable": true
+  },
+  {
+    "id": "product-1",
+    "question": "How much does the Growth plan cost per month?",
+    "expected_source_file": "product_faq.pdf",
+    "expected_answer_contains": "$99",
+    "answerable": true
+  },
+  {
+    "id": "product-2",
+    "question": "Are monthly plans eligible for refunds?",
+    "expected_source_file": "product_faq.pdf",
+    "expected_answer_contains": "not eligible",
+    "answerable": true
+  },
+  {
+    "id": "product-3",
+    "question": "What is the first-response SLA for Starter plan customers?",
+    "expected_source_file": "product_faq.pdf",
+    "expected_answer_contains": "2 business days",
+    "answerable": true
+  },
+  {
+    "id": "unanswerable-1",
+    "question": "What is the company's parental leave policy?",
+    "expected_source_file": null,
+    "expected_answer_contains": null,
+    "answerable": false
+  },
+  {
+    "id": "unanswerable-2",
+    "question": "Who is the company's CEO?",
+    "expected_source_file": null,
+    "expected_answer_contains": null,
+    "answerable": false
+  }
+]

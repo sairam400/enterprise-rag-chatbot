@@ -1,0 +1,24 @@
+Password Policy
+
+All employee accounts must use a password of at least 14 characters,
+including one number and one symbol. Passwords must be rotated every 180 days
+and cannot repeat any of the last 5 passwords used.
+
+Multi-factor authentication is required for all accounts with access to
+production systems or customer data. Hardware security keys are the required
+second factor for engineers with production database access; app-based
+authenticators are acceptable for all other roles.
+
+Incident Reporting
+
+Any suspected security incident, including phishing emails, lost devices, or
+unauthorized access, must be reported to security@company.example within 1
+hour of discovery. The security team's target acknowledgment time is 15
+minutes during business hours.
+
+Data Classification
+
+Customer data is classified as Confidential and may only be accessed by
+employees with an active business need, logged through the access request
+system. Publicly available marketing material is classified as Public and has
+no access restrictions.

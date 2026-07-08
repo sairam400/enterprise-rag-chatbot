@@ -6,6 +6,7 @@ Azure never requires a code change.
 from __future__ import annotations
 
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -14,10 +15,15 @@ LLMProvider = Literal["anthropic", "azure_openai"]
 EmbeddingProvider = Literal["sentence_transformers", "azure_openai"]
 VectorStoreProvider = Literal["chroma", "azure_search"]
 
+# Resolved relative to this file, not the process cwd, so config loads the
+# same way whether it's run from backend/ (uvicorn --reload) or repo root
+# (the eval harness).
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_BACKEND_DIR / ".env",
         env_file_encoding="utf-8",
         extra="ignore",
         case_sensitive=False,

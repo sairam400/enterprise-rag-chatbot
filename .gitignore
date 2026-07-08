@@ -16,6 +16,7 @@ venv/
 # --- Data / models / vector store ---
 backend/data/
 data/
+evals/eval_data/
 *.sqlite3
 chroma/
 
