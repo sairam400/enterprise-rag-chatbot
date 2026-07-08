@@ -1,9 +1,4 @@
-"""FastAPI application entrypoint.
-
-Phase 1 exposes only health and config introspection so the container is
-verifiable end-to-end (``docker-compose up`` → ``GET /health``). Ingestion,
-retrieval, and chat endpoints are added in later phases.
-"""
+"""FastAPI application entrypoint."""
 
 from __future__ import annotations
 
@@ -31,11 +26,10 @@ app.add_middleware(
 
 @app.get("/health", tags=["system"])
 def health() -> dict[str, str]:
-    """Liveness probe. Returns ``{"status": "ok"}`` when the app is up."""
     return {"status": "ok"}
 
 
 @app.get("/api/config", tags=["system"])
 def config_view() -> dict[str, object]:
-    """Return the active, non-secret configuration for verification/debugging."""
+    """Active, non-secret settings for verifying deployment config."""
     return settings.public_dict()

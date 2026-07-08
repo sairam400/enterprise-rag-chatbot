@@ -1,30 +1,31 @@
 # Enterprise RAG Chatbot
 
-A document-grounded chatbot that answers questions **only** from your uploaded
-documents, with a source citation on every claim. If the answer isn't in the
-documents, it says so instead of guessing.
+A chatbot that answers questions from your uploaded documents only, with a
+citation on every claim. If the answer isn't in the documents, it says so
+instead of guessing.
 
-> **Status:** 🚧 Under construction — Phase 1 of 7 complete (repo skeleton,
-> config system, Docker scaffold). See [Roadmap](#roadmap).
+Status: Phase 1 of 7 complete (repo skeleton, config system, Docker scaffold).
+See [Roadmap](#roadmap).
 
 ---
 
 ## Demo
 
 <!-- Phase 7: replace with a demo GIF -->
-_Demo GIF placeholder — added in Phase 7._
+Demo GIF placeholder, added in Phase 7.
 
 ---
 
 ## Problem Statement
 
-General-purpose LLM chatbots hallucinate and can't cite where an answer came
-from, which makes them unsafe for enterprise knowledge bases (policies,
-contracts, runbooks). This project constrains the model to a corpus you
-control: it retrieves the most relevant passages from your uploaded documents,
-answers strictly from that context, and renders the exact source chunks behind
-every response. Out-of-scope questions get an honest "I don't know" rather than
-a confident guess.
+General-purpose chatbots hallucinate and can't tell you where an answer came
+from. That's a real problem for internal knowledge bases like policies,
+contracts, and runbooks, where a wrong but confident answer is worse than no
+answer. This project constrains the model to a corpus you control: it
+retrieves the relevant passages from your uploaded documents, answers only
+from that context, and shows the exact source chunks behind every response.
+If a question falls outside the corpus, it says it doesn't know rather than
+guessing.
 
 ---
 
@@ -32,38 +33,38 @@ a confident guess.
 
 <!-- Phase 7: replace with an architecture diagram -->
 ```
-                    ┌─────────────┐
-  Upload  ─────────▶│  Ingestion  │  parse → chunk → embed → store
-  (PDF/DOCX/TXT/MD) └──────┬──────┘
-                           ▼
-                    ┌─────────────┐
-                    │ Vector Store│  ChromaDB (default) | Azure AI Search
-                    └──────┬──────┘
-                           ▲
-  Question ────────────────┼──────────────────────────────┐
-       │                   │ top-k retrieval               │
-       ▼                   │                               │
-  ┌──────────┐      ┌──────┴──────┐      ┌──────────────┐  │
-  │  Query   │─────▶│  Retrieval  │─────▶│  Claude LLM  │──┘
-  │ rewrite  │      └─────────────┘      │  + citations │
-  └──────────┘                          └──────┬───────┘
-   (follow-ups →                                ▼
+                    +-------------+
+  Upload  --------->|  Ingestion  |  parse -> chunk -> embed -> store
+  (PDF/DOCX/TXT/MD) +------+------+
+                           v
+                    +-------------+
+                    | Vector Store|  ChromaDB (default) | Azure AI Search
+                    +------+------+
+                           ^
+  Question ----------------+------------------------------+
+       |                   | top-k retrieval               |
+       v                   |                                |
+  +----------+      +------+------+      +--------------+  |
+  |  Query   |----->|  Retrieval  |----->|  Claude LLM  |--+
+  | rewrite  |      +-------------+      |  + citations |
+  +----------+                           +------+-------+
+   (follow-ups ->                               v
     standalone)                    answer + cited source chunks
 ```
 
-Every provider sits behind an interface and is selected via config:
+Each concern sits behind an interface, chosen at runtime by config:
 
-| Concern      | Default (free, local)        | Optional (config swap)   |
-| ------------ | ---------------------------- | ------------------------ |
-| LLM          | Anthropic Claude API         | Azure OpenAI             |
-| Embeddings   | `sentence-transformers` (CPU)| Azure OpenAI embeddings  |
-| Vector store | ChromaDB                     | Azure AI Search          |
+| Concern      | Default (free, local)         | Optional (config swap)  |
+| ------------ | ------------------------------ | ------------------------ |
+| LLM          | Anthropic Claude API           | Azure OpenAI             |
+| Embeddings   | `sentence-transformers` (CPU)  | Azure OpenAI embeddings  |
+| Vector store | ChromaDB                       | Azure AI Search          |
 
 ---
 
 ## Quickstart
 
-**Prerequisites:** Docker + an [Anthropic API key](https://console.anthropic.com/).
+Prerequisites: Docker and an [Anthropic API key](https://console.anthropic.com/).
 
 ```bash
 git clone https://github.com/sairam400/enterprise-rag-chatbot.git
@@ -76,15 +77,17 @@ Verify the backend is up:
 
 ```bash
 curl http://localhost:8000/health          # {"status":"ok"}
-curl http://localhost:8000/api/config       # active (non-secret) configuration
+curl http://localhost:8000/api/config      # active, non-secret configuration
 ```
 
-Interactive API docs: <http://localhost:8000/docs>
+Interactive API docs: http://localhost:8000/docs
 
 ### Cheaper demos
 
 The default model is `claude-opus-4-8`. For lower-cost runs, set
-`ANTHROPIC_MODEL=claude-sonnet-5` in `.env` — near-Opus quality on grounded Q&A.
+`ANTHROPIC_MODEL=claude-sonnet-5` in `.env`. I found it close to Opus quality
+on grounded Q&A for a fraction of the cost, which matters if you're running
+this repeatedly against your own documents.
 
 ### Local development (without Docker)
 
@@ -99,41 +102,54 @@ uvicorn app.main:app --reload
 
 ## Configuration
 
-All configuration is environment-driven; see [`.env.example`](.env.example) for
-the full list with defaults. Key knobs: `LLM_PROVIDER`, `EMBEDDING_PROVIDER`,
-`VECTOR_STORE`, `ANTHROPIC_MODEL`, `CHUNK_SIZE`, `CHUNK_OVERLAP`, `TOP_K`.
+All configuration is environment-driven. See [`.env.example`](.env.example)
+for the full list with defaults. Key knobs: `LLM_PROVIDER`,
+`EMBEDDING_PROVIDER`, `VECTOR_STORE`, `ANTHROPIC_MODEL`, `CHUNK_SIZE`,
+`CHUNK_OVERLAP`, `TOP_K`.
 
 ---
 
 ## Evaluation Results
 
 <!-- Phase 6: paste generated results table here -->
-_Eval results table placeholder — generated by the harness in [`/evals`](evals) in Phase 6._
+Eval results table placeholder, generated by the harness in [`/evals`](evals)
+in Phase 6.
 
 ---
 
 ## Design Decisions
 
-- **Provider abstraction over vendor lock-in.** LLM, embeddings, and vector
-  store each sit behind an interface, chosen at runtime by config — so the same
-  codebase runs free-and-local or on Azure without edits.
-- **Prompt-based citations, not the native Citations API.** Citing retrieved
-  chunks by index (`[1]`, `[2]`) is provider-portable and maps directly to the
-  vector-retrieval flow and the sources UI. _(More rationale added in Phase 7.)_
-- **Grounded-or-abstain.** The system prompt constrains Claude to the retrieved
-  context and instructs it to decline when the answer isn't present.
+- **Provider interfaces over vendor lock-in.** LLM, embeddings, and vector
+  store each sit behind an interface, chosen at runtime by config. Same
+  codebase runs free and local, or on Azure, without code changes.
+- **Chroma over Azure AI Search as the default.** I wanted anyone to be able
+  to clone this and run it with zero cloud account, so the default path has
+  to be free and local. Azure AI Search is there for anyone who wants to point
+  this at an existing enterprise deployment.
+- **Prompt-based citations, not Anthropic's native Citations API.** I tried
+  the native Citations API first, but it attaches documents as content blocks
+  and cites character spans, which doesn't compose well once you're
+  retrieving arbitrary chunks from a vector store and want the same behavior
+  under Azure OpenAI too. I cut it in favor of citing retrieved chunks by
+  index (`[1]`, `[2]`) in the prompt and returning the chunk objects
+  alongside the answer. Less elegant than the native API, but portable across
+  providers and simpler to reason about.
+- **Grounded-or-abstain.** The system prompt restricts Claude to the
+  retrieved context and tells it to say so explicitly when the answer isn't
+  there. This is the actual point of the project, so it's enforced in the
+  prompt rather than left as a suggestion.
 
 ---
 
 ## Roadmap
 
-- [x] **Phase 1** — Repo skeleton, config system, Docker scaffold
-- [ ] **Phase 2** — Ingestion pipeline (parse, chunk, embed, store) + CLI
-- [ ] **Phase 3** — Retrieval + Claude answer generation with citations (CLI)
-- [ ] **Phase 4** — FastAPI endpoints
-- [ ] **Phase 5** — React frontend
-- [ ] **Phase 6** — Eval harness + sample docs
-- [ ] **Phase 7** — README polish, final cleanup
+- [x] Phase 1: repo skeleton, config system, Docker scaffold
+- [ ] Phase 2: ingestion pipeline (parse, chunk, embed, store) + CLI
+- [ ] Phase 3: retrieval + Claude answer generation with citations (CLI)
+- [ ] Phase 4: FastAPI endpoints
+- [ ] Phase 5: React frontend
+- [ ] Phase 6: eval harness + sample docs
+- [ ] Phase 7: README polish, final cleanup
 
 ---
 

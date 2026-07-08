@@ -1,12 +1,6 @@
-"""Application configuration.
-
-All runtime configuration is sourced from environment variables (or a local
-``.env`` file) via :class:`Settings`. Every provider choice — LLM, embeddings,
-and vector store — is toggled here so that swapping Anthropic for Azure OpenAI,
-or ChromaDB for Azure AI Search, never requires a code change.
-
-The repo runs for free out of the box: local ``sentence-transformers``
-embeddings + local ChromaDB. Only an ``ANTHROPIC_API_KEY`` is required.
+"""App settings, loaded from the environment. Provider choices (LLM,
+embeddings, vector store) live here so swapping Anthropic/Chroma for
+Azure never requires a code change.
 """
 
 from __future__ import annotations
@@ -22,12 +16,6 @@ VectorStoreProvider = Literal["chroma", "azure_search"]
 
 
 class Settings(BaseSettings):
-    """Strongly-typed application settings loaded from the environment.
-
-    Field names map to upper-case environment variables (case-insensitive),
-    e.g. ``anthropic_model`` reads ``ANTHROPIC_MODEL``.
-    """
-
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
