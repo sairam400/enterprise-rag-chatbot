@@ -1,7 +1,6 @@
-# docker-compose up   →   backend on http://localhost:8000
+# docker-compose up   →   frontend on http://localhost:5173, backend on :8000
 #
 # Only ANTHROPIC_API_KEY is required in .env (copy from .env.example).
-# The frontend service is added in Phase 5.
 services:
   backend:
     build: ./backend
@@ -20,6 +19,14 @@ services:
       timeout: 5s
       retries: 3
       start_period: 40s
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
 
 volumes:
   hf-cache:

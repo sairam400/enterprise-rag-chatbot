@@ -4,7 +4,7 @@ A chatbot that answers questions from your uploaded documents only, with a
 citation on every claim. If the answer isn't in the documents, it says so
 instead of guessing.
 
-Status: Phase 4 of 7 complete (FastAPI endpoints). See [Roadmap](#roadmap).
+Status: Phase 5 of 7 complete (React frontend). See [Roadmap](#roadmap).
 
 ---
 
@@ -81,6 +81,8 @@ curl http://localhost:8000/api/config      # active, non-secret configuration
 
 Interactive API docs: http://localhost:8000/docs
 
+Chat UI: http://localhost:5173
+
 ### Cheaper demos
 
 The default model is `claude-opus-4-8`. For lower-cost runs, set
@@ -146,7 +148,7 @@ in Phase 6.
 - [x] Phase 2: ingestion pipeline (parse, chunk, embed, store) + CLI
 - [x] Phase 3: retrieval + Claude answer generation with citations (CLI)
 - [x] Phase 4: FastAPI endpoints
-- [ ] Phase 5: React frontend
+- [x] Phase 5: React frontend
 - [ ] Phase 6: eval harness + sample docs
 - [ ] Phase 7: README polish, final cleanup
 
