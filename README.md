@@ -4,7 +4,8 @@ A chatbot that answers questions from your uploaded documents only, with a
 citation on every claim. If the answer isn't in the documents, it says so
 instead of guessing.
 
-Status: Phase 2 of 7 complete (ingestion pipeline). See [Roadmap](#roadmap).
+Status: Phase 3 of 7 complete (retrieval + cited generation). See
+[Roadmap](#roadmap).
 
 ---
 
@@ -144,7 +145,7 @@ in Phase 6.
 
 - [x] Phase 1: repo skeleton, config system, Docker scaffold
 - [x] Phase 2: ingestion pipeline (parse, chunk, embed, store) + CLI
-- [ ] Phase 3: retrieval + Claude answer generation with citations (CLI)
+- [x] Phase 3: retrieval + Claude answer generation with citations (CLI)
 - [ ] Phase 4: FastAPI endpoints
 - [ ] Phase 5: React frontend
 - [ ] Phase 6: eval harness + sample docs
